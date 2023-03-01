@@ -13,7 +13,7 @@ async function getAllUsers() {
 }
 async function createUser({ username, password }) {
   try {
-    const result = await client.query(
+    const { rows } = await client.query(
       `
       INSERT INTO users(username, password) 
       VALUES($1, $2) 
@@ -23,7 +23,7 @@ async function createUser({ username, password }) {
       [username, password]
     );
 
-    return result;
+    return rows;
   } catch (error) {
     throw error;
   }
