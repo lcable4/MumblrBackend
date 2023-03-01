@@ -1,5 +1,43 @@
 const { client, getAllUsers, createUser } = require("./index");
 
+
+async function dropTables() {
+  try {
+    console.log("Starting to drop tables...");
+
+    await client.query(`
+    DROP TABLE IF EXISTS users;
+        `);
+
+    console.log("Finished dropping tables!");
+  } catch (error) {
+    console.error("Error dropping tables!");
+
+    throw error;
+  }
+}
+async function createTables() {
+  try {
+    console.log("Starting to build tables...");
+
+    await client.query(`
+    CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        username varchar(255) UNIQUE NOT NULL,
+        password varchar(255) NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        location VARCHAR(255) NOT NULL,
+        active BOOLEAN DEFAULT true
+      );
+        `);
+    console.log("Finished building tables!");
+  } catch (error) {
+    console.error("Error building tables!");
+    throw error;
+  }
+}
+
+
 async function createInitialUsers() {
   try {
     console.log("Starting to create users...");
@@ -28,38 +66,6 @@ async function createInitialUsers() {
   }
 }
 
-async function dropTables() {
-  try {
-    console.log("Starting to drop tables...");
-
-    await client.query(`
-    DROP TABLE IF EXISTS users;
-        `);
-
-    console.log("Finished dropping tables!");
-  } catch (error) {
-    console.error("Error dropping tables!");
-
-    throw error;
-  }
-}
-async function createTables() {
-  try {
-    console.log("Starting to build tables...");
-
-    await client.query(`
-    CREATE TABLE users (
-        id SERIAL PRIMARY KEY,
-        username varchar(255) UNIQUE NOT NULL,
-        password varchar(255) NOT NULL
-      );
-        `);
-    console.log("Finished building tables!");
-  } catch (error) {
-    console.error("Error building tables!");
-    throw error;
-  }
-}
 async function rebuildDB() {
   try {
     client.connect();
