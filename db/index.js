@@ -11,6 +11,14 @@ async function getAllUsers() {
   console.log(rows);
   return rows;
 }
+
+async function getAllPosts() {
+  try {
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function createUser({ username, password, name, location }) {
   try {
     const { rows } = await client.query(
@@ -24,6 +32,13 @@ async function createUser({ username, password, name, location }) {
     );
 
     return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createPost({ authorId, title, content }) {
+  try {
   } catch (error) {
     throw error;
   }
@@ -59,9 +74,54 @@ async function updateUser(id, fields = {}) {
   }
 }
 
+async function updatePost(id, { title, content, active }) {
+  try {
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPostsByUser(userId) {
+  try {
+    const { rows } = await client.query(`
+        SELECT * FROM posts
+        WHERE "authorId"=${userId};
+      `);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserById(userId) {
+  try {
+    const { rows } = await client.query(`
+        SELECT * FROM user
+        WHERE "id"=${userId}
+
+        `);
+    const user = rows[0];
+    if (!user) {
+      return null;
+    }
+    delete user.password;
+    user.posts = await getPostsByUser(userId);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
   getAllUsers,
   createUser,
+  createPost,
   updateUser,
+  updatePost,
+  getAllPosts,
+  getPostsByUser,
+  getUserById,
 };
