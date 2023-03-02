@@ -161,7 +161,6 @@ async function rebuildDB() {
     client.connect();
 
     await dropTables();
-    await createTags();
     await createTables();
     await createInitialUsers();
     await createInitialPosts();

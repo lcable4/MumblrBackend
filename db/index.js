@@ -162,21 +162,21 @@ async function createTags(tagList) {
   // need something like $1, $2, $3
   const selectValues = tagList.map((_, index) => `$${index + 1}`).join(", ");
   // then we can use (${ selectValues }) in our string template
-  console.log(selectValues, "SELECTVALUES165");
+  console.log(insertValues, "SELECTVALUES165");
   try {
     await client.query(
       `
-      INSERT INTO tags(name),
-      VALUES(${insertValues}),
+      INSERT INTO tags(name)
+      VALUES (${insertValues})
       ON CONFLICT (name) DO NOTHING;
       `,
       tagList
     );
     const { rows } = await client.query(
       `
-      SELECT * FROM tags,
-      WHERE name,
-      VALUES(${selectValues})
+      SELECT * FROM tags
+      WHERE name
+      IN (${selectValues});
       `,
       tagList
     );
@@ -187,6 +187,7 @@ async function createTags(tagList) {
     // select all tags where the name is in our taglist
     // return the rows from the query
   } catch (error) {
+    console.log("error in create tags");
     throw error;
   }
 }
