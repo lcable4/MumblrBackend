@@ -96,7 +96,7 @@ async function updatePost(id, field = { title, content, active }) {
   const setString = Object.keys(field)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
-
+  console.log(setString, "SETSTRING")
   // return early if this is called without fields
   if (setString.length === 0) {
     return;
@@ -108,10 +108,10 @@ async function updatePost(id, field = { title, content, active }) {
       `
         UPDATE posts
         SET ${setString}
-        WHERE "authorId"=${"authorId"}
+        WHERE "authorId"=${id}
         RETURNING *;
       `,
-      [...Object.values(field), id]
+      Object.values(field)
     );
 
     return post;
@@ -137,7 +137,7 @@ async function getPostsByUser(userId) {
 async function getUserById(userId) {
   try {
     const { rows } = await client.query(`
-        SELECT * FROM user
+        SELECT * FROM users
         WHERE "id"=${userId}
 
         `);
