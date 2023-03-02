@@ -47,15 +47,15 @@ async function createUser({ username, password, name, location }) {
 async function createPost({ authorId, title, content }) {
   try {
     const { rows } = await client.query(
-        `
+      `
         INSERT INTO posts("authorId", title, content) 
         VALUES($1, $2, $3) 
         RETURNING *;
       `,
-        [authorId, title, content]
-      );
-      console.log(rows, "Create Post function")
-      return rows
+      [authorId, title, content]
+    );
+    console.log(rows, "Create Post function");
+    return rows;
   } catch (error) {
     throw error;
   }
@@ -92,11 +92,9 @@ async function updateUser(id, fields = {}) {
 }
 
 async function updatePost(id, field = { title, content, active }) {
-  
   const setString = Object.keys(field)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
-  console.log(setString, "SETSTRING")
   // return early if this is called without fields
   if (setString.length === 0) {
     return;
@@ -115,7 +113,6 @@ async function updatePost(id, field = { title, content, active }) {
     );
 
     return post;
-
   } catch (error) {
     throw error;
   }
@@ -149,6 +146,29 @@ async function getUserById(userId) {
     user.posts = await getPostsByUser(userId);
 
     return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createTags(tagList) {
+  if (tagList.length === 0) {
+    return;
+  }
+
+  // need something like: $1), ($2), ($3
+  const insertValues = tagList.map((_, index) => `$${index + 1}`).join("), (");
+  // then we can use: (${ insertValues }) in our string template
+
+  // need something like $1, $2, $3
+  const selectValues = tagList.map((_, index) => `$${index + 1}`).join(", ");
+  // then we can use (${ selectValues }) in our string template
+
+  try {
+    // insert the tags, doing nothing on conflict
+    // returning nothing, we'll query after
+    // select all tags where the name is in our taglist
+    // return the rows from the query
   } catch (error) {
     throw error;
   }
