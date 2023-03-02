@@ -37,7 +37,6 @@ async function createUser({ username, password, name, location }) {
     `,
       [username, password, name, location]
     );
-
     return rows;
   } catch (error) {
     throw error;
@@ -66,7 +65,7 @@ async function updateUser(id, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
-
+  console.log(setString, "SETSTRING")
   // return early if this is called without fields
   if (setString.length === 0) {
     return;
@@ -153,18 +152,35 @@ async function getUserById(userId) {
 
 async function createTags(tagList) {
   if (tagList.length === 0) {
+
     return;
   }
 
   // need something like: $1), ($2), ($3
   const insertValues = tagList.map((_, index) => `$${index + 1}`).join("), (");
   // then we can use: (${ insertValues }) in our string template
-
+  console.log(insertValues, "insertValues")
   // need something like $1, $2, $3
   const selectValues = tagList.map((_, index) => `$${index + 1}`).join(", ");
   // then we can use (${ selectValues }) in our string template
 
   try {
+    await client.query(
+      `
+      INSERT INTO tags(name),
+      VALUES(${insertValues}),
+      ON CONFLICT (name) DO NOTHING;
+      `, tagList
+    )
+    const {rows} = await client.query(
+      `
+      SELECT * FROM tags,
+      WHERE name,
+      VALUES(${selectValues})
+      `, tagList
+    )
+    console.log(rows, "LINE183")
+    return rows
     // insert the tags, doing nothing on conflict
     // returning nothing, we'll query after
     // select all tags where the name is in our taglist
@@ -184,4 +200,5 @@ module.exports = {
   getAllPosts,
   getPostsByUser,
   getUserById,
+  createTags
 };

@@ -132,7 +132,7 @@ async function createInitialPosts() {
 async function rebuildDB() {
   try {
     client.connect();
-
+    
     await dropTables();
     await createTables();
     await createInitialUsers();
@@ -162,7 +162,7 @@ async function testDB() {
     console.log("Result:", posts);
 
     console.log("Calling updatePost on posts[0]");
-    console.log(posts, "POSTS LINE 162");
+    
     const updatePostResult = await updatePost(posts[0].id, {
       title: "New Title",
       content: "Updated Content",
