@@ -108,7 +108,7 @@ async function updatePost(id, field = { title, content, active }) {
       `
         UPDATE posts
         SET ${setString}
-        WHERE "authorId"
+        WHERE "authorId"=${"authorId"}
         RETURNING *;
       `,
       [...Object.values(field), id]
