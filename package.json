@@ -20,7 +20,9 @@
   "homepage": "https://github.com/ziggyboy2001/juiceBox#readme",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "pg": "^8.9.0"
   },
