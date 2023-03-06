@@ -6,7 +6,7 @@
     "seed:dev": "nodemon ./db/seed.js",
     "start": "node index.js",
     "start:dev": "nodemon index.js",
-    "build": "webpack"
+    "build": "react-scripts build"
   },
   "repository": {
     "type": "git",
