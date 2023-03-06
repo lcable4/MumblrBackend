@@ -252,7 +252,6 @@ async function createTags(tagList) {
   // need something like $1, $2, $3
   const selectValues = tagList.map((_, index) => `$${index + 1}`).join(", ");
   // then we can use (${ selectValues }) in our string template
-  console.log(insertValues, "SELECTVALUES165");
   try {
     await client.query(
       `
@@ -270,7 +269,7 @@ async function createTags(tagList) {
       `,
       tagList
     );
-    console.log(rows, "LINE183");
+
     return rows;
     // insert the tags, doing nothing on conflict
     // returning nothing, we'll query after
@@ -366,6 +365,7 @@ module.exports = {
   getAllPosts,
   getPostsByUser,
   getUserById,
+  getPostById,
   createTags,
   createPostTag,
   addTagsToPost,
