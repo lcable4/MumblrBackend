@@ -7,6 +7,7 @@ const {
   getUserByUsername,
   createUser,
   updateUser,
+  getUserById
 } = require("../db");
 
 usersRouter.use((req, res, next) => {

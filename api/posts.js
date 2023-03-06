@@ -15,7 +15,9 @@ postsRouter.get("/", async (req, res, next) => {
     const allPosts = await getAllPosts();
 
     const posts = allPosts.filter((post) => {
-      return post.active || (req.user && post.author.id === req.user.id);
+      if (!post.active) {
+        return post.active || (req.user && post.author.id === req.user.id);
+      } 
     });
 
     res.send({
