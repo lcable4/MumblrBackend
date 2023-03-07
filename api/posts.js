@@ -2,22 +2,25 @@ const express = require("express");
 const { getAllPosts } = require("../db");
 const postsRouter = express.Router();
 const { requireUser } = require("./utils");
-const { createPost, getPostById, updatePost } = require("../db");
+const { createPost, getPostById, updatePost, getAllUsers } = require("../db");
 
 postsRouter.use((req, res, next) => {
   console.log("A request is being made to /posts");
 
   next();
 });
-
 postsRouter.get("/", async (req, res, next) => {
   try {
     const allPosts = await getAllPosts();
     const posts = allPosts.filter((post) => {
       if (post.active) {
         return post.active || (req.user && post.author.id === req.user.id);
-      } 
-    console.log(posts, "ASASDASD")
+      } else if (!post.author.active) {
+        return (
+          post.author.active || (req.user && post.author.id === req.user.id)
+        );
+      }
+      console.log(posts, "ASASDASD");
     });
 
     res.send({

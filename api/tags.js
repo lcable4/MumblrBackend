@@ -21,10 +21,12 @@ tagsRouter.get("/:tagName/posts", async (req, res, next) => {
   let { tagName } = req.params;
   try {
     const tags = await getPostsByTagName(tagName);
+    const allPosts = await getAllPosts();
+    console.log(tags);
     const posts = allPosts.filter((post) => {
       // the post is active, doesn't matter who it belongs to
       if (post.active) {
-        return post.author.active || (req.user && post.author.id === req.user.id);
+        return true;
       }
 
       // the post is not active, but it belongs to the current user
@@ -36,7 +38,8 @@ tagsRouter.get("/:tagName/posts", async (req, res, next) => {
       return false;
     });
     res.send({
-      posts
+      tags,
+      posts,
     });
     // use our method to get posts by tag name from the db
     // send out an object to the client { posts: // the posts }

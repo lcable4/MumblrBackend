@@ -115,7 +115,7 @@ usersRouter.delete("/:userId", async (req, res, next) => {
         message: "You cannot delete another user's account",
       });
     }
-
+    
     const updatedUser = await updateUser(userToDelete.id, { active: false });
 
     res.send({ user: updatedUser });
