@@ -8,9 +8,8 @@ const {
   createUser,
   updateUser,
   getUserById,
-  updateUserById,
-  requireUser,
 } = require("../db");
+const {requireUser} = require("./utils")
 
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
@@ -126,29 +125,23 @@ usersRouter.delete("/:userId", async (req, res, next) => {
   }
 });
 
-usersRouter.patch("/:userId", async (req, res, next) => {
+usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
   try {
-    const userToActive = await getUserById(req.params.userId);
-
-    if (!userToActive || !userToActive.active) {
-      return next({
-        name: "UserNotFoundError",
-        message: "AAAAAAAAAAAAAAAAAAAA",
-      });
+    const userToUpdate = await getUserById(req.params.userId);
+    if (!userToUpdate) {
+      return res.status(404).send({ error: "User not found" });
     }
 
-    if (userToActive.id === req.user.id) {
-      return next({
-        name: "UnauthorizedUserError",
-        message: "You cannot delete another user's account",
-      });
+    if (req.user.id !== userToUpdate.id) {
+      return res.status(403).send({ error: "Unauthorized" });
     }
 
-    const updatedUser = await updateUser(userToActive.id, { active: true });
+    const { active } = req.body;
+    const updatedUser = await updateUser(userToUpdate.id, { active });
 
     res.send({ user: updatedUser });
-  } catch ({ name, message }) {
-    next({ name, message });
+  } catch (error) {
+    next(error);
   }
 });
 
