@@ -129,11 +129,11 @@ usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
   try {
     const userToUpdate = await getUserById(req.params.userId);
     if (!userToUpdate) {
-      return res.status(404).send({ error: "User not found" });
+      return res.send({ error: "User not found" });
     }
 
     if (req.user.id !== userToUpdate.id) {
-      return res.status(403).send({ error: "Unauthorized" });
+      return res.send({ error: "Unauthorized" });
     }
 
     const { active } = req.body;
