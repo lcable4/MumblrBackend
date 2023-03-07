@@ -13,11 +13,11 @@ postsRouter.use((req, res, next) => {
 postsRouter.get("/", async (req, res, next) => {
   try {
     const allPosts = await getAllPosts();
-
     const posts = allPosts.filter((post) => {
-      if (!post.active) {
+      if (post.active) {
         return post.active || (req.user && post.author.id === req.user.id);
       } 
+    console.log(posts, "ASASDASD")
     });
 
     res.send({
