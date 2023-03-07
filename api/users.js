@@ -7,7 +7,9 @@ const {
   getUserByUsername,
   createUser,
   updateUser,
-  getUserById
+  getUserById,
+  updateUserById,
+  requireUser,
 } = require("../db");
 
 usersRouter.use((req, res, next) => {
@@ -115,8 +117,34 @@ usersRouter.delete("/:userId", async (req, res, next) => {
         message: "You cannot delete another user's account",
       });
     }
-    
+
     const updatedUser = await updateUser(userToDelete.id, { active: false });
+
+    res.send({ user: updatedUser });
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+usersRouter.patch("/:userId", async (req, res, next) => {
+  try {
+    const userToActive = await getUserById(req.params.userId);
+
+    if (!userToActive || !userToActive.active) {
+      return next({
+        name: "UserNotFoundError",
+        message: "AAAAAAAAAAAAAAAAAAAA",
+      });
+    }
+
+    if (userToActive.id === req.user.id) {
+      return next({
+        name: "UnauthorizedUserError",
+        message: "You cannot delete another user's account",
+      });
+    }
+
+    const updatedUser = await updateUser(userToActive.id, { active: true });
 
     res.send({ user: updatedUser });
   } catch ({ name, message }) {
