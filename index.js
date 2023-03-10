@@ -1,11 +1,6 @@
 require("dotenv").config();
 
-<<<<<<< HEAD
-
-const PORT = 3001;
-=======
 const PORT = 3000;
->>>>>>> dd11e46857a963c6e47cc55434ef16b1ebde11e0
 const express = require("express");
 const server = express();
 const morgan = require("morgan");
