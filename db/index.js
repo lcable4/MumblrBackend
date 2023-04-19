@@ -8,7 +8,7 @@ const client = new Client({
   ssl:
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
-      : undefined,
+      : true,
 });
 
 async function getAllUsers() {
